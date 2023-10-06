@@ -1,95 +1,141 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import { useEffect, useState } from "react";
+import "/public/App.css";
+
+import Thread from "./Components/Thread";
+import SubHeader from "./Components/SubHeader";
+import { FaJoint } from "react-icons/fa";
+
+import { TestContext } from "./context";
+
+import Masonry from "react-masonry-css";
+import React from "react";
+import { ThreadI, ThreadIfb, ThreadReplyI } from "./interfaces";
+
+//import { usePostThread } from "./firebase";
+
+import { getAllThreads } from "./api-utils";
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const [clickedCreateThread, SetClickedCreateThread] = useState(false);
+    const [textareaInput, SetTextareaInput] = useState("");
+    const [titleTextareaInput, SetTitleTextareaInput] = useState("");
+    const [clickedHideThreads, SetClickedHideThreads] = useState(false);
+    const [threadLayout, SetThreadLayout] = useState(1);
+    const [threadImage, SetThreadImage] = useState({});
+    const [clickedBks, SetClickedBks] = useState(false);
+    const [highlightEmptyField, SetHighlightEmptyField] = useState(false);
+    const [Threads, setThreads] = useState<ThreadI[]>([]);
+    const [errorLoadingThreads, setErrorLoadingThreads] = useState(false);
+    const [noThreadsinDB, setNoThreadsinDB] = useState(false);
+    const uuid = require("react-uuid");
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    useEffect(() => {
+        getAllThreads()
+            .then((data) => {
+                if (data.length === 0) {
+                    setNoThreadsinDB(true);
+                }
+                setThreads(data);
+            })
+            .catch((err) => {
+                setErrorLoadingThreads(true);
+            });
+    }, []);
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+    function handleCreateThreadPopup() {
+        SetClickedCreateThread(!clickedCreateThread);
+        SetTextareaInput("");
+        SetTitleTextareaInput("");
+    }
+
+    // function handleSubmitThread() {
+    //     if (textareaInput === "" || titleTextareaInput === "") {
+    //         SetHighlightEmptyField(true);
+    //     } else {
+    //         const newThread: ThreadI = {
+    //             threadTextValue: textareaInput,
+    //             threadTitle: titleTextareaInput,
+    //             id: uuid().toString().split("-")[0],
+    //             threadTime: new Date().toLocaleTimeString(),
+    //             replies: [],
+    //         };
+    //         setThreads((prev: any) => {
+    //             if (prev) {
+    //                 return [...prev, newThread];
+    //             } else {
+    //                 return [newThread];
+    //             }
+    //         });
+    //         SetThreadImage([]);
+    //         SetClickedCreateThread(false);
+    //         SetTextareaInput("");
+    //         SetTitleTextareaInput("");
+    //         SetHighlightEmptyField(false);
+    //     }
+    // }
+
+    return (
+        <TestContext.Provider
+            value={{
+                clickedCreateThread,
+                SetClickedCreateThread,
+                titleTextareaInput,
+                textareaInput,
+                SetTitleTextareaInput,
+                SetTextareaInput,
+                handleCreateThreadPopup,
+                threadLayout,
+                SetThreadLayout,
+                SetClickedHideThreads,
+                clickedHideThreads,
+                SetThreadImage,
+                threadImage,
+                clickedBks,
+                SetClickedBks,
+                highlightEmptyField,
+                setThreads,
+                SetHighlightEmptyField,
+                //usePostThread,
+                getAllThreads,
+            }}
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+            <SubHeader />
+            <Masonry
+                breakpointCols={threadLayout}
+                className="masongrid"
+                columnClassName="masongridcolumn"
+            >
+                {Threads.length > 0 || noThreadsinDB ? (
+                    Threads.map((item: ThreadI) => (
+                        <div key={item.thread_id}>
+                            <Thread
+                                thread_id={item.thread_id}
+                                body={item.body}
+                                title={item.title}
+                                replies={item?.replies}
+                                created_at={item.created_at}
+                                image={item?.image}
+                                last_updated={item.last_updated}
+                                clickedHideThreads={clickedHideThreads}
+                            />
+                        </div>
+                    ))
+                ) : (
+                    <div className="Loading">Loading...</div>
+                )}
+                {errorLoadingThreads && (
+                    <div className="Loading">
+                        Error loading threads, please try again...
+                    </div>
+                )}
+            </Masonry>
+            <div className="Footer">
+                {" "}
+                <a className="HyperText" style={{ display: "inline-block" }}>
+                    [Page 1]
+                </a>{" "}
+            </div>
+        </TestContext.Provider>
+    );
 }
