@@ -4,8 +4,10 @@ import Draggable from "react-draggable";
 import { useContext, useEffect } from "react";
 import { TestContext } from "../context";
 import React from "react";
-import { ThreadI, ThreadIfb, ThreadSkeletonI } from "../interfaces";
+import { ThreadI, ThreadIfb, ThreadSkeletonI, MediaI } from "../interfaces";
 import { getAllThreads, usePostThread } from "../api-utils";
+//import uuid
+import uuid from "react-uuid";
 
 const CreateThreadPopUp = () => {
     const {
@@ -96,15 +98,15 @@ const CreateThreadPopUp = () => {
                                 className="HyperText"
                                 style={{ cursor: "auto", float: "left" }}
                             >
-                                Thread Image:
+                                Thread media:
                             </a>
                             <br />
                             <br />
                             <div>
                                 <label className="FileInputPrompt HyperText">
-                                    {!threadImage.file
+                                    {!threadImage
                                         ? "Select Image"
-                                        : threadImage.file.name}
+                                        : threadImage.media.file_name}
                                     <input
                                         style={{ display: "none" }}
                                         type="file"
@@ -114,11 +116,15 @@ const CreateThreadPopUp = () => {
                                                 event.target.files &&
                                                 event.target.files[0];
                                             if (!fileList) return;
+                                            const media: MediaI = {
+                                                media_id: uuid().slice(0, 10),
+                                                url: null,
+                                                file_type: fileList.type,
+                                                kilobytes: fileList.size / 1000,
+                                                file_name: fileList.name,
+                                            };
                                             SetThreadImage({
-                                                imageUrl:
-                                                    URL.createObjectURL(
-                                                        fileList
-                                                    ),
+                                                media: media,
                                                 file: fileList,
                                             });
                                         }}
@@ -161,17 +167,21 @@ const CreateThreadPopUp = () => {
                                             .slice(0, 19)
                                             .replace("T", " "),
                                         title: titleTextareaInput,
-                                        image: null,
-                                        // ...(threadImage.file && {
-                                        //     image: ,
-                                        // }),
+                                        image: threadImage
+                                            ? threadImage.media.media_id
+                                            : null,
                                     };
 
-                                    // if (threadImage.file) {
-                                    //     postThread(thread, threadImage);
-                                    //     return;
-                                    // }
-                                    postThread(thread);
+                                    if (threadImage.media) {
+                                        console.log(threadImage);
+                                        postThread(
+                                            thread,
+                                            threadImage.media,
+                                            threadImage.file
+                                        );
+                                        return;
+                                    }
+                                    //postThread(thread);
                                 }}
                             >
                                 [Submit]

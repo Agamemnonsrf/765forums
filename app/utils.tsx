@@ -4,14 +4,14 @@ function decideTime(time: string) {
 
     let now = new Date().getTime();
     let timeAdjusted = adjustTZ(date, 1, 3);
-    console.log(timeAdjusted);
+
     let timeBetween = now - timeAdjusted.getTime();
     let seconds = Math.floor(timeBetween / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
     let days = Math.floor(hours / 24);
     const total = { seconds, minutes, hours, days };
-    console.log(total);
+
     if (days > 0) {
         return `${days} day${days > 1 ? "s" : ""} ago`;
     } else if (hours > 0) {

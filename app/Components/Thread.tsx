@@ -202,18 +202,22 @@ function Thread(props: Props) {
                         <>
                             <a
                                 className="HyperText"
-                                href={props.image}
+                                href={
+                                    "http://localhost:3001/media/" + props.image
+                                }
                                 target="_blank"
                                 style={{ fontSize: "smaller" }}
                             >
-                                {props.image}
+                                {"http://localhost:3001/media/" + props.image}
                             </a>
                             <img
                                 style={{
                                     cursor: "pointer",
                                     width: clickedThreadImage ? "30%" : "15%",
                                 }}
-                                src={props.image}
+                                src={
+                                    "http://localhost:3001/media/" + props.image
+                                }
                                 className="ThreadImg"
                                 onClick={handleClickThreadImage}
                             />

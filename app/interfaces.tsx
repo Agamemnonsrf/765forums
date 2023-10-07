@@ -22,4 +22,12 @@ interface ThreadReplyI {
     replying_to: number | null;
 }
 
-export type { ThreadI, ThreadIfb, ThreadReplyI, ThreadSkeletonI };
+interface MediaI {
+    media_id: string;
+    url: string | null;
+    file_name: string;
+    file_type: string;
+    kilobytes: number;
+}
+
+export type { ThreadI, ThreadIfb, ThreadReplyI, ThreadSkeletonI, MediaI };

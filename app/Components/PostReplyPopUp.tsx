@@ -6,6 +6,7 @@ import { ThreadI, ThreadReplyI } from "../interfaces";
 import { TestContext } from "../context";
 //import { usePostReply } from "../firebase";
 import { getThread, usePostReply } from "../api-utils";
+import { completeId } from "../utils";
 
 interface Props {
     clickedPostReply: boolean;
@@ -121,8 +122,8 @@ function PostReplyPopUp(props: Props) {
                     >
                         Reply to:{" "}
                         {props.clickedReplytoReply
-                            ? props.ReplytoReplyto
-                            : `${props.threadID} (OP)`}
+                            ? completeId(props.ReplytoReplyto)
+                            : `${completeId(props.threadID)} (OP)`}
                     </a>
                     <textarea
                         className="ThreadInputArea"

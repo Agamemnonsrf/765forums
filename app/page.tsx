@@ -10,7 +10,7 @@ import { TestContext } from "./context";
 
 import Masonry from "react-masonry-css";
 import React from "react";
-import { ThreadI, ThreadIfb, ThreadReplyI } from "./interfaces";
+import { ThreadI, ThreadIfb, ThreadReplyI, MediaI } from "./interfaces";
 
 //import { usePostThread } from "./firebase";
 
@@ -22,7 +22,7 @@ export default function Home() {
     const [titleTextareaInput, SetTitleTextareaInput] = useState("");
     const [clickedHideThreads, SetClickedHideThreads] = useState(false);
     const [threadLayout, SetThreadLayout] = useState(1);
-    const [threadImage, SetThreadImage] = useState({});
+    const [threadImage, SetThreadImage] = useState<MediaI>();
     const [clickedBks, SetClickedBks] = useState(false);
     const [highlightEmptyField, SetHighlightEmptyField] = useState(false);
     const [Threads, setThreads] = useState<ThreadI[]>([]);
@@ -115,7 +115,7 @@ export default function Home() {
                                 title={item.title}
                                 replies={item?.replies}
                                 created_at={item.created_at}
-                                image={item?.image}
+                                image={item?.image ?? ""}
                                 last_updated={item.last_updated}
                                 clickedHideThreads={clickedHideThreads}
                             />
