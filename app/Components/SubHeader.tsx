@@ -4,23 +4,18 @@ import {
     BsLayoutSplit,
     BsLayoutThreeColumns,
 } from "react-icons/bs";
-import BookmarkTab from "./BookmarkTab";
 import CreateThreadPopUp from "./CreateThreadPopUp";
 import { useContext } from "react";
-import { TestContext } from "../context";
+import { TestContext } from "../Utils/context";
 import React from "react";
 
-export default function SubHeader({}) {
+export default function SubHeader() {
     const {
         handleCreateThreadPopup,
         threadLayout,
         SetThreadLayout,
         SetClickedHideThreads,
         clickedHideThreads,
-        SetClickedBks,
-        clickedBks,
-        // bkcopy,
-        // SetbkCopy,
     } = useContext(TestContext);
     return (
         <div className="SubHeader">
@@ -37,15 +32,6 @@ export default function SubHeader({}) {
             >
                 [Create Thread]
             </a>
-            <a className="HyperText" onClick={() => SetClickedBks(!clickedBks)}>
-                [Bookmarks]
-            </a>
-            <BookmarkTab
-                clickedBks={clickedBks}
-                SetClickedBks={SetClickedBks}
-                // bkcopy={bkcopy}
-                // SetbkCopy={SetbkCopy}
-            />
             <div className="dropdown">
                 <a className="HyperText dropdownParent">[Change Layout]</a>
                 <div className="dropdownContent">

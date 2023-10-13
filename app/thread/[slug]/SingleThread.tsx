@@ -5,7 +5,7 @@ import ThreadReplyRepliable from "../../Components/ThreadReplyRepliable";
 
 import { AiOutlineStar, AiFillStar, AiFillPushpin } from "react-icons/ai";
 import React from "react";
-import { ThreadI, ThreadReplyI } from "../../interfaces";
+import { ThreadI, ThreadReplyI } from "../../Utils/interfaces";
 import ThreadReply from "../../Components/ThreadReply";
 import Link from "next/link";
 import { decideTime, completeId, adjustTZ } from "../../utils";
@@ -50,8 +50,8 @@ function SingleThread(props: Props) {
     const [bked, Setbked] = useState(false);
     const [unbked, SetUnbked] = useState("");
 
-    const handleMouseMove = (e: { screenX: any; clientY: number }) => {
-        SetMouseCord({ x: e.screenX, y: e.clientY + window.pageYOffset });
+    const handleMouseMove = (screenX: number, clientY: number) => {
+        SetMouseCord({ x: screenX, y: clientY + window.scrollY });
     };
 
     function handleClickRevealThread() {

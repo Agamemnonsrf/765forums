@@ -2,10 +2,10 @@
 import { FiX } from "react-icons/fi";
 import Draggable from "react-draggable";
 import React, { useContext } from "react";
-import { ThreadI, ThreadReplyI } from "../interfaces";
-import { TestContext } from "../context";
+import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
+import { TestContext } from "../Utils/context";
 //import { usePostReply } from "../firebase";
-import { getThread, usePostReply } from "../api-utils";
+import { getThread, usePostReply } from "../Utils/api-utils";
 import { completeId } from "../utils";
 
 interface Props {

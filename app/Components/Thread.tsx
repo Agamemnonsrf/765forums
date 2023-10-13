@@ -4,7 +4,7 @@ import PostReplyPopUp from "./PostReplyPopUp";
 
 import { AiOutlineStar, AiFillStar, AiFillPushpin } from "react-icons/ai";
 import React from "react";
-import { ThreadI, ThreadReplyI } from "../interfaces";
+import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
 import ThreadReply from "./ThreadReply";
 import Link from "next/link";
 import { adjustTZ, completeId, decideTime } from "../utils";

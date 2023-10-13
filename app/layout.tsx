@@ -2,10 +2,9 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import React from "react";
 import { FaJoint } from "react-icons/fa";
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "765 Forums",
+    title: "765Forums",
     description: "An anonymous imageboard",
 };
 
@@ -16,7 +15,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${inter.className} Container`}>
+            <body className={`Container`}>
                 <header>
                     <div
                         className="Header"

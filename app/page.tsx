@@ -4,17 +4,14 @@ import "/public/App.css";
 
 import Thread from "./Components/Thread";
 import SubHeader from "./Components/SubHeader";
-import { FaJoint } from "react-icons/fa";
 
-import { TestContext } from "./context";
+import { TestContext } from "./Utils/context";
 
 import Masonry from "react-masonry-css";
 import React from "react";
-import { ThreadI, ThreadIfb, ThreadReplyI, MediaI } from "./interfaces";
+import { ThreadI, MediaI } from "./Utils/interfaces";
 
-//import { usePostThread } from "./firebase";
-
-import { getAllThreads } from "./api-utils";
+import { getAllThreads } from "./Utils/api-utils";
 
 export default function Home() {
     const [clickedCreateThread, SetClickedCreateThread] = useState(false);
@@ -23,12 +20,10 @@ export default function Home() {
     const [clickedHideThreads, SetClickedHideThreads] = useState(false);
     const [threadLayout, SetThreadLayout] = useState(1);
     const [threadImage, SetThreadImage] = useState<MediaI>();
-    const [clickedBks, SetClickedBks] = useState(false);
     const [highlightEmptyField, SetHighlightEmptyField] = useState(false);
     const [Threads, setThreads] = useState<ThreadI[]>([]);
     const [errorLoadingThreads, setErrorLoadingThreads] = useState(false);
     const [noThreadsinDB, setNoThreadsinDB] = useState(false);
-    const uuid = require("react-uuid");
 
     useEffect(() => {
         getAllThreads()
@@ -49,32 +44,6 @@ export default function Home() {
         SetTitleTextareaInput("");
     }
 
-    // function handleSubmitThread() {
-    //     if (textareaInput === "" || titleTextareaInput === "") {
-    //         SetHighlightEmptyField(true);
-    //     } else {
-    //         const newThread: ThreadI = {
-    //             threadTextValue: textareaInput,
-    //             threadTitle: titleTextareaInput,
-    //             id: uuid().toString().split("-")[0],
-    //             threadTime: new Date().toLocaleTimeString(),
-    //             replies: [],
-    //         };
-    //         setThreads((prev: any) => {
-    //             if (prev) {
-    //                 return [...prev, newThread];
-    //             } else {
-    //                 return [newThread];
-    //             }
-    //         });
-    //         SetThreadImage([]);
-    //         SetClickedCreateThread(false);
-    //         SetTextareaInput("");
-    //         SetTitleTextareaInput("");
-    //         SetHighlightEmptyField(false);
-    //     }
-    // }
-
     return (
         <TestContext.Provider
             value={{
@@ -91,12 +60,9 @@ export default function Home() {
                 clickedHideThreads,
                 SetThreadImage,
                 threadImage,
-                clickedBks,
-                SetClickedBks,
                 highlightEmptyField,
                 setThreads,
                 SetHighlightEmptyField,
-                //usePostThread,
                 getAllThreads,
             }}
         >

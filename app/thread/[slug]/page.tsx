@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { getThread } from "../../api-utils";
+import { getThread } from "../../Utils/api-utils";
 import { usePathname } from "next/navigation";
 import Loading from "./Loading";
-import { ThreadI, ThreadIfb } from "../../interfaces";
+import { ThreadI, ThreadIfb } from "../../Utils/interfaces";
 import SingleThread from "./SingleThread";
 import "/public/App.css";
 

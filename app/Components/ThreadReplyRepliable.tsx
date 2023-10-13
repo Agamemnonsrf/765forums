@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ThreadReplyI } from "../interfaces";
+import { ThreadReplyI } from "../Utils/interfaces";
 import ReplyingHoverPopUp from "./ReplyingHoverPopUp";
 import { adjustTZ, completeId } from "../utils";
 
@@ -11,7 +11,7 @@ interface ExtendedThreadReplyI extends ThreadReplyI {
     SetHighlightThisReplyTextValue: (value: string) => void;
     SetHighlightThread: (value: boolean) => void;
     SetHovering: (value: boolean) => void;
-    handleMouseMove: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+    handleMouseMove: (screenX: number, clientY: number) => void;
     mouseCord: { x: number; y: number };
     hovering: boolean;
     threadId: number;
@@ -100,18 +100,14 @@ export default function ThreadReply(props: ExtendedThreadReplyI) {
                                     behavior: "smooth",
                                 });
                             }
-                            props.SetHighlightThisReply(
-                                parseInt(props.replying_to.toString())
-                            );
+                            props.SetHighlightThisReply(props.replying_to);
                         } else {
                             window.scrollTo({ top: 0, behavior: "smooth" });
                         }
                     }}
                     onMouseEnter={() => {
                         if (props.replying_to) {
-                            props.SetHighlightThisReply(
-                                parseInt(props.replying_to.toString())
-                            );
+                            props.SetHighlightThisReply(props.replying_to);
                         }
                     }}
                     onMouseLeave={() => {
@@ -119,7 +115,9 @@ export default function ThreadReply(props: ExtendedThreadReplyI) {
                             props.SetHighlightThisReply(0);
                         }
                     }}
-                    onMouseMove={() => props.handleMouseMove}
+                    onMouseMove={(e) =>
+                        props.handleMouseMove(e.screenX, e.clientY)
+                    }
                 >
                     Replying to:{" "}
                     {props.replying_to
@@ -131,14 +129,19 @@ export default function ThreadReply(props: ExtendedThreadReplyI) {
             <div style={{ fontSize: "large", fontFamily: "monospace" }}>
                 {props.content}
             </div>
-            <ReplyingHoverPopUp
-                mouseCord={props.mouseCord}
-                hovering={props.hovering}
-                replyingtoTextValue={props.content}
-                key={props.reply_id}
-                highlightThisReply={props.highlightThisReply}
-                highlightThisReplyTextValue={props.highlightThisReplyTextValue}
-            />
+            {props.replying_to && (
+                <ReplyingHoverPopUp
+                    mouseCord={props.mouseCord}
+                    hovering={props.hovering}
+                    replyingtoTextValue={props.content}
+                    key={props.reply_id}
+                    highlightThisReply={props.highlightThisReply}
+                    highlightThisReplyTextValue={
+                        props.highlightThisReplyTextValue
+                    }
+                    replies={props.replies}
+                />
+            )}
         </li>
     );
 }

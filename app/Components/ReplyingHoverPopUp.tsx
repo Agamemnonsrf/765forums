@@ -1,6 +1,11 @@
 import React from "react";
+import { completeId } from "../utils";
+import { ThreadReplyI } from "../Utils/interfaces";
 
 export default function ReplyingHoverPopUp(props: any) {
+    //use state that holds the reply text value, it is set in a useffect that runs when the mouse is hovering over a reply, it uses props.highlightThisReply and searches for it in the replies array amd sets the reply text value to the reply text value of the reply that has the same id as props.highlightThisReply
+    //
+    console.log();
     return (
         <div
             className="ThreadReply"
@@ -16,16 +21,15 @@ export default function ReplyingHoverPopUp(props: any) {
                     className="HyperTextnoHover"
                     style={{ fontSize: "small", float: "left" }}
                 >
-                    Poster:&nbsp;|
-                </a>
-                <a
-                    className="HyperTextnoHover"
-                    style={{ fontSize: "small", float: "left" }}
-                >
-                    ID:&nbsp;{props.highlightThisReply}
+                    ID:&nbsp;{completeId(props.highlightThisReply)}
                 </a>
             </div>{" "}
-            {props.highlightThisReplyTextValue}
+            {
+                props.replies?.filter(
+                    (reply: ThreadReplyI) =>
+                        reply.reply_id === props.highlightThisReply
+                )[0]?.content
+            }
         </div>
     );
 }

@@ -2,11 +2,10 @@
 import { FiX } from "react-icons/fi";
 import Draggable from "react-draggable";
 import { useContext, useEffect } from "react";
-import { TestContext } from "../context";
+import { TestContext } from "../Utils/context";
 import React from "react";
-import { ThreadI, ThreadIfb, ThreadSkeletonI, MediaI } from "../interfaces";
-import { getAllThreads, usePostThread } from "../api-utils";
-//import uuid
+import { ThreadIfb, MediaI } from "../Utils/interfaces";
+import { getAllThreads, usePostThread } from "../Utils/api-utils";
 import uuid from "react-uuid";
 
 const CreateThreadPopUp = () => {
@@ -181,7 +180,7 @@ const CreateThreadPopUp = () => {
                                         );
                                         return;
                                     }
-                                    //postThread(thread);
+                                    postThread(thread);
                                 }}
                             >
                                 [Submit]
