@@ -130,7 +130,7 @@ const usePostReply = () => {
         setIsLoading(false);
     };
 
-    return { isLoading, error, success, setSuccess, postReply };
+    return { isLoading, error, success, setSuccess, postReply, setError };
 };
 
 export { getAllThreads, getThread, usePostThread, usePostReply };

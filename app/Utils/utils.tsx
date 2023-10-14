@@ -59,4 +59,8 @@ function completeId(id: number) {
     return newId + id;
 }
 
-export { decideTime, completeId, adjustTZ };
+function mySQLDate() {
+    return new Date().toISOString().slice(0, 19).replace("T", " ");
+}
+
+export { decideTime, completeId, adjustTZ, mySQLDate };

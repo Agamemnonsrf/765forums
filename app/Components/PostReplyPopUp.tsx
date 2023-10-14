@@ -6,7 +6,7 @@ import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
 import { TestContext } from "../Utils/context";
 //import { usePostReply } from "../firebase";
 import { getThread, usePostReply } from "../Utils/api-utils";
-import { completeId } from "../utils";
+import { completeId } from "../Utils/utils";
 
 interface Props {
     clickedPostReply: boolean;
@@ -18,16 +18,13 @@ interface Props {
     SetClickedReplytoReply: (clickedReplytoReply: boolean) => void;
     threadID: number;
     ReplytoReplyto: number;
-    ReplytoReplytoKey: string;
-    ThreadReplies?: ThreadReplyI[];
     setThread: React.Dispatch<React.SetStateAction<ThreadI>>;
     setLastUpdate: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function PostReplyPopUp(props: Props) {
-    const uuid = require("react-uuid");
-    const context = useContext(TestContext);
-    const { isLoading, error, success, setSuccess, postReply } = usePostReply();
+    const { isLoading, error, success, setSuccess, postReply, setError } =
+        usePostReply();
     const [highlightEmptyField, SetHighlightEmptyField] = React.useState(false);
 
     React.useEffect(() => {
@@ -41,60 +38,12 @@ function PostReplyPopUp(props: Props) {
         }
     }, [success]);
 
-    function handlePostReply() {
-        if (props.replyTextareaInput === "") {
-            console.log("empty");
-        } else {
-            context.setThreads((prevThreads: ThreadI[]) => {
-                return prevThreads.map((thread: ThreadI) => {
-                    if (thread.thread_id === props.threadID) {
-                        return {
-                            ...thread,
-                            replies: [
-                                ...thread.replies,
-                                {
-                                    replyTextValue: props.replyTextareaInput,
-                                    ID: uuid().toString().split("-")[0],
-                                    index: thread.replies.length,
-                                    replyTime: new Date().toLocaleTimeString(),
-                                    replyingtoReply: props.clickedReplytoReply
-                                        ? true
-                                        : false,
-                                    replyingto: props.ReplytoReplyto,
-                                    replyingtoTextValue: "",
-                                },
-                            ],
-                        };
-                    }
-                });
-            });
-        }
-
-        // if (props.clickedReplytoReply) {
-        //     for (let i = 1; i < props.ThreadReplies.length; i++) {
-        //         if (
-        //             props.ThreadReplies[i].ID ==
-        //             props.ThreadReplies[props.ThreadReplies.length - 1]
-        //                 .replyingto
-        //         ) {
-        //             props.ThreadReplies[
-        //                 props.ThreadReplies.length - 1
-        //             ].replyingtoTextValue =
-        //                 props.ThreadReplies[i].replyTextValue;
-        //         }
-        //     }
-        // }
-
-        props.SetClickedPostReply(false);
-        props.SetClickedReplytoReply(false);
-        props.SetReplyTextareaInput("");
-    }
-
     function closePostReply() {
         props.SetClickedPostReply(false);
         props.SetClickedReplytoReply(false);
         props.SetReplyTextareaInput("");
         SetHighlightEmptyField(false);
+        setError("");
     }
 
     return (
@@ -150,7 +99,7 @@ function PostReplyPopUp(props: Props) {
                             style={{ textAlign: "center" }}
                             onClick={() => {
                                 const date = new Date();
-                                alert(date.toISOString());
+
                                 date.setTime(
                                     date.getTime() +
                                         (date.getTimezoneOffset() / -60) *
@@ -158,8 +107,6 @@ function PostReplyPopUp(props: Props) {
                                             60 *
                                             1000
                                 );
-                                alert("after: " + date.toISOString());
-                                alert(date.getTimezoneOffset());
 
                                 if (props.replyTextareaInput !== "") {
                                     const reply: ThreadReplyI = {

@@ -2,7 +2,7 @@
 import React from "react";
 import { ThreadReplyI } from "../Utils/interfaces";
 import ReplyingHoverPopUp from "./ReplyingHoverPopUp";
-import { adjustTZ, completeId } from "../utils";
+import { adjustTZ, completeId } from "../Utils/utils";
 
 interface ExtendedThreadReplyI extends ThreadReplyI {
     highlightThisReply: number;

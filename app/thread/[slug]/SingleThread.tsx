@@ -8,7 +8,7 @@ import React from "react";
 import { ThreadI, ThreadReplyI } from "../../Utils/interfaces";
 import ThreadReply from "../../Components/ThreadReply";
 import Link from "next/link";
-import { decideTime, completeId, adjustTZ } from "../../utils";
+import { decideTime, completeId, adjustTZ } from "../../Utils/utils";
 
 //1) Implement replying to replies and also implement user ID's
 //2) Implement to be able to make a thread that has a poll in it
@@ -16,6 +16,7 @@ import { decideTime, completeId, adjustTZ } from "../../utils";
 //he will be able to delete or add images to a thread with captions after he has created
 //as long as he writes the correct password (and posterID (posterID is public))
 //4) button on thread that when clicked smooth scrolls to next thread
+//5) thread displays its rank amongst the other threads
 
 interface Props {
     body: string;
@@ -38,7 +39,6 @@ function SingleThread(props: Props) {
     const [clickedRevealReplies, SetClickedRevealReplies] = useState(true);
     const [clickedReplytoReply, SetClickedReplytoReply] = useState(false);
     const [ReplytoReplyto, SetReplytoReplyto] = useState(0);
-    const [ReplytoReplytoKey, SetReplytoReplytoKey] = useState("");
     const [highlightThread, SetHighlightThread] = useState(false);
     const [highlightThisReply, SetHighlightThisReply] = useState(0);
     const [highlightThisReplyTextValue, SetHighlightThisReplyTextValue] =
@@ -47,8 +47,6 @@ function SingleThread(props: Props) {
     const [mouseCord, SetMouseCord] = useState({ x: 0, y: 0 });
     const [hoveringTime, setHoveringTime] = useState(false);
     const [hoveringLastReply, setHoveringLastReply] = useState(false);
-    const [bked, Setbked] = useState(false);
-    const [unbked, SetUnbked] = useState("");
 
     const handleMouseMove = (screenX: number, clientY: number) => {
         SetMouseCord({ x: screenX, y: clientY + window.scrollY });
@@ -66,11 +64,6 @@ function SingleThread(props: Props) {
     function handleClickThreadImage() {
         SetClickedThreadImage(!clickedThreadImage);
     }
-    function handlePostReplyPopUp() {
-        SetClickedPostReply(!clickedPostReply);
-        SetClickedReplytoReply(false);
-        SetReplyTextareaInput("");
-    }
 
     const local_created_at = adjustTZ(new Date(props.created_at));
     const local_last_updated = adjustTZ(new Date(props.last_updated));
@@ -84,15 +77,6 @@ function SingleThread(props: Props) {
                 transition: ".1s",
             }}
         >
-            <a
-                className="HyperText"
-                onClick={handleClickRevealThread}
-                style={{ display: "inline-block" }}
-            >
-                {clickedRevealThread
-                    ? "Reveal Thread <..."
-                    : "Collapse Thread >..."}
-            </a>
             <a
                 className="HyperText"
                 style={{
@@ -109,41 +93,6 @@ function SingleThread(props: Props) {
                 [Reply to Thread]
             </a>{" "}
             <div
-                style={{ float: "left" }}
-                // onClick={() => {
-                //     Setbked(!bked);
-                //     if (!bked) {
-                //         props.bkcopy.push({ threadID: props.ID });
-                //     } else {
-                //         SetUnbked(props.ID);
-                //         for (let i = 0; i < props.bkcopy.length; i++) {
-                //             if (unbked == props.bkcopy[i].threadID) {
-                //                 props.bkcopy.splice(i, 1);
-                //             }
-                //         }
-                //         props.bkcopy.pop();
-                //     }
-
-                //     console.log(props.bkcopy);
-                // }}
-            >
-                {" "}
-                {/* {props.isPinned == 1 ? (
-                    <AiFillPushpin size={35} className="HyperText" />
-                ) : (
-                    <></>
-                )} */}
-                {bked ? (
-                    <>
-                        <AiFillStar size={25} className="HyperText" />
-                    </>
-                ) : (
-                    <>
-                        <AiOutlineStar size={25} className="HyperText" />
-                    </>
-                )}
-            </div>
-            <div
                 style={{
                     float: "right",
                     right: "2rem",
@@ -151,7 +100,6 @@ function SingleThread(props: Props) {
                 }}
             >
                 <PostReplyPopUp
-                    ThreadReplies={props.replies}
                     clickedPostReply={clickedPostReply}
                     SetClickedPostReply={SetClickedPostReply}
                     replyTextareaInput={replyTextareaInput}
@@ -161,7 +109,6 @@ function SingleThread(props: Props) {
                     SetClickedReplytoReply={SetClickedReplytoReply}
                     threadID={props.thread_id}
                     ReplytoReplyto={ReplytoReplyto}
-                    ReplytoReplytoKey={ReplytoReplytoKey}
                     setThread={props.setThread}
                     setLastUpdate={props.setLastUpdate}
                 />

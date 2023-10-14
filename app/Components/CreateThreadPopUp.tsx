@@ -1,12 +1,13 @@
 "use client";
 import { FiX } from "react-icons/fi";
-import Draggable from "react-draggable";
+import Draggable, { DraggableProps } from "react-draggable";
 import { useContext, useEffect } from "react";
 import { TestContext } from "../Utils/context";
 import React from "react";
 import { ThreadIfb, MediaI } from "../Utils/interfaces";
 import { getAllThreads, usePostThread } from "../Utils/api-utils";
 import uuid from "react-uuid";
+import { mySQLDate } from "../Utils/utils";
 
 const CreateThreadPopUp = () => {
     const {
@@ -157,14 +158,8 @@ const CreateThreadPopUp = () => {
                                     const thread: ThreadIfb = {
                                         thread_id: 0,
                                         body: textareaInput,
-                                        created_at: new Date()
-                                            .toISOString()
-                                            .slice(0, 19)
-                                            .replace("T", " "),
-                                        last_updated: new Date()
-                                            .toISOString()
-                                            .slice(0, 19)
-                                            .replace("T", " "),
+                                        created_at: mySQLDate(),
+                                        last_updated: mySQLDate(),
                                         title: titleTextareaInput,
                                         image: threadImage
                                             ? threadImage.media.media_id
@@ -172,7 +167,6 @@ const CreateThreadPopUp = () => {
                                     };
 
                                     if (threadImage.media) {
-                                        console.log(threadImage);
                                         postThread(
                                             thread,
                                             threadImage.media,

@@ -1,5 +1,5 @@
 import React from "react";
-import { completeId } from "../utils";
+import { completeId } from "../Utils/utils";
 import { ThreadReplyI } from "../Utils/interfaces";
 
 export default function ReplyingHoverPopUp(props: any) {
