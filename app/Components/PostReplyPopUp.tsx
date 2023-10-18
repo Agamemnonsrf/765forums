@@ -1,10 +1,9 @@
 "use client";
 import { FiX } from "react-icons/fi";
 import Draggable from "react-draggable";
-import React, { useContext } from "react";
+import React from "react";
 import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
-import { TestContext } from "../Utils/context";
-//import { usePostReply } from "../firebase";
+
 import { getThread, usePostReply } from "../Utils/api-utils";
 import { completeId } from "../Utils/utils";
 
@@ -18,8 +17,8 @@ interface Props {
     SetClickedReplytoReply: (clickedReplytoReply: boolean) => void;
     threadID: number;
     ReplytoReplyto: number;
-    setThread: React.Dispatch<React.SetStateAction<ThreadI>>;
-    setLastUpdate: React.Dispatch<React.SetStateAction<string>>;
+    setThread?: React.Dispatch<React.SetStateAction<ThreadI>>;
+    setLastUpdate?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function PostReplyPopUp(props: Props) {
@@ -30,10 +29,11 @@ function PostReplyPopUp(props: Props) {
     React.useEffect(() => {
         if (success) {
             getThread(props.threadID).then((thread) => {
-                props.setThread(thread);
+                props.setThread && props.setThread(thread);
                 closePostReply();
                 setSuccess(false);
-                props.setLastUpdate(new Date().toLocaleTimeString());
+                props.setLastUpdate &&
+                    props.setLastUpdate(new Date().toLocaleTimeString());
             });
         }
     }, [success]);

@@ -2,10 +2,12 @@
 import React from "react";
 import { getThread } from "../../Utils/api-utils";
 import { usePathname } from "next/navigation";
-import Loading from "./Loading";
+
 import { ThreadI, ThreadIfb } from "../../Utils/interfaces";
-import SingleThread from "./SingleThread";
+
 import "/public/App.css";
+import Thread from "@/app/Components/Thread";
+import { decideTime } from "@/app/Utils/utils";
 
 function ThreadPage() {
     const pathname = parseInt(usePathname().split("/")[2]);
@@ -25,7 +27,7 @@ function ThreadPage() {
         <>
             <div style={{ padding: "15px", marginBottom: "10px" }}>
                 {thread.thread_id && (
-                    <SingleThread
+                    <Thread
                         replies={thread?.replies}
                         thread_id={thread.thread_id}
                         body={thread.body}
@@ -35,6 +37,7 @@ function ThreadPage() {
                         image={thread?.image ?? ""}
                         setThread={setThread}
                         setLastUpdate={setLastUpdate}
+                        singleThread={true}
                     />
                 )}
             </div>
@@ -44,7 +47,7 @@ function ThreadPage() {
                     bottom: "0",
                     left: "0",
                     width: "100%",
-                    backgroundColor: "rgba(0,0,0,0.5)",
+                    backgroundColor: "rgb(35,35,35)",
                     padding: "5px",
                     fontWeight: "bolder",
                     color: "rgb(172, 172, 172)",

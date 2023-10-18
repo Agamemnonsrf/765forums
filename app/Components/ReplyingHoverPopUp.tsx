@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useRef } from "react";
 import { completeId } from "../Utils/utils";
 import { ThreadReplyI } from "../Utils/interfaces";
 
-export default function ReplyingHoverPopUp(props: any) {
-    //use state that holds the reply text value, it is set in a useffect that runs when the mouse is hovering over a reply, it uses props.highlightThisReply and searches for it in the replies array amd sets the reply text value to the reply text value of the reply that has the same id as props.highlightThisReply
-    //
-    console.log();
+interface Props {
+    highlightThisReply: number;
+    replies?: ThreadReplyI[];
+    mouseCord: { x: number; y: number };
+}
+
+export default function ReplyingHoverPopUp(props: Props) {
+    const reply = props.replies?.filter(
+        (reply: ThreadReplyI) => reply.reply_id === props.highlightThisReply
+    )[0];
+
+    //useRef
+    const heightRef = useRef<HTMLDivElement>(null);
+
     return (
         <div
+            ref={heightRef}
             className="ThreadReply"
             style={{
                 position: "absolute",
-                top: props.mouseCord.y + "px",
+                top:
+                    props.mouseCord.y -
+                    (heightRef.current?.clientHeight || 0) +
+                    "px",
                 left: props.mouseCord.x + "px",
+
                 display: props.highlightThisReply ? "inline" : "none",
+                maxWidth: "300px",
             }}
         >
             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -24,12 +40,9 @@ export default function ReplyingHoverPopUp(props: any) {
                     ID:&nbsp;{completeId(props.highlightThisReply)}
                 </a>
             </div>{" "}
-            {
-                props.replies?.filter(
-                    (reply: ThreadReplyI) =>
-                        reply.reply_id === props.highlightThisReply
-                )[0]?.content
-            }
+            <span style={{ fontFamily: "monospace", fontSize: "larger" }}>
+                {reply?.content}
+            </span>
         </div>
     );
 }

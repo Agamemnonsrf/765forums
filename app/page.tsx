@@ -84,6 +84,7 @@ export default function Home() {
                                 image={item?.image ?? ""}
                                 last_updated={item.last_updated}
                                 clickedHideThreads={clickedHideThreads}
+                                singleThread={false}
                             />
                         </div>
                     ))

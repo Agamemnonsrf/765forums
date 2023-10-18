@@ -1,20 +1,13 @@
 "use client";
 import { useState } from "react";
-import PostReplyPopUp from "./PostReplyPopUp";
 
-import { AiOutlineStar, AiFillStar, AiFillPushpin } from "react-icons/ai";
 import React from "react";
 import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
 import ThreadReply from "./ThreadReply";
 import Link from "next/link";
 import { adjustTZ, completeId, decideTime } from "../Utils/utils";
 
-//1) Implement replying to replies and also implement user ID's
-//2) Implement to be able to make a thread that has a poll in it
-//3) user can input a posterID when he makes a thread, and also a password
-//he will be able to delete or add images to a thread with captions after he has created
-//as long as he writes the correct password (and posterID (posterID is public))
-//4) button on thread that when clicked smooth scrolls to next thread
+import PostReplyPopUp from "../Components/PostReplyPopUp";
 
 interface Props {
     body: string;
@@ -25,15 +18,21 @@ interface Props {
     image?: string;
     replies?: ThreadReplyI[];
     clickedHideThreads?: boolean;
+    setThread?: React.Dispatch<React.SetStateAction<ThreadI>>;
+    setLastUpdate?: React.Dispatch<React.SetStateAction<string>>;
+    singleThread: boolean;
 }
 
 function Thread(props: Props) {
     const [clickedPostReply, SetClickedPostReply] = useState(false);
+    const [replyTextareaInput, SetReplyTextareaInput] = useState("");
     const [clickedThreadImage, SetClickedThreadImage] = useState(false);
     const [clickedRevealThread, SetClickedRevealThread] = useState(false);
     const [clickedRevealReplies, SetClickedRevealReplies] = useState(true);
+    const [clickedReplytoReply, SetClickedReplytoReply] = useState(false);
+    const [ReplytoReplyto, SetReplytoReplyto] = useState(0);
     const [highlightThread, SetHighlightThread] = useState(false);
-    const [highlightThisReply, SetHighlightThisReply] = useState("");
+    const [highlightThisReply, SetHighlightThisReply] = useState(0);
     const [highlightThisReplyTextValue, SetHighlightThisReplyTextValue] =
         useState("");
     const [hovering, SetHovering] = useState(false);
@@ -41,19 +40,12 @@ function Thread(props: Props) {
     const [hoveringTime, setHoveringTime] = useState(false);
     const [hoveringLastReply, setHoveringLastReply] = useState(false);
 
-    const handleMouseMove = (e: { screenX: any; clientY: number }) => {
-        SetMouseCord({ x: e.screenX, y: e.clientY + window.pageYOffset });
+    const handleMouseMove = (screenX: number, clientY: number) => {
+        SetMouseCord({ x: screenX, y: clientY + window.scrollY });
     };
 
-    function handleClickRevealThread() {
-        SetClickedRevealThread(!clickedRevealThread);
-    }
-    function handleClickRevealReplies() {
-        SetClickedRevealReplies(!clickedRevealReplies);
-    }
-
-    function handleClickThreadImage() {
-        SetClickedThreadImage(!clickedThreadImage);
+    function handleReplyTextareaChange(replyTextareaInputChange: string) {
+        SetReplyTextareaInput(replyTextareaInputChange);
     }
 
     const local_created_at = adjustTZ(new Date(props.created_at));
@@ -70,26 +62,77 @@ function Thread(props: Props) {
             }}
             key={props.thread_id}
         >
-            <a
-                className="HyperText"
-                onClick={handleClickRevealThread}
-                style={{ display: "inline-block" }}
-            >
-                {clickedRevealThread
-                    ? "Reveal Thread <..."
-                    : "Collapse Thread >..."}
-            </a>
-            <Link
-                href={`/thread/${completeId(props.thread_id)}`}
-                className="HyperText"
-                style={{
-                    textAlign: "right",
-                    float: "right",
-                    textDecoration: "none",
-                }}
-            >
-                [See Thread]
-            </Link>{" "}
+            {props.singleThread ? (
+                <>
+                    <a
+                        className="HyperText"
+                        style={{
+                            textAlign: "right",
+                            float: "right",
+                            textDecoration: "none",
+                        }}
+                        onClick={() => {
+                            SetClickedPostReply(!clickedPostReply);
+                            SetClickedReplytoReply(false);
+                            SetReplyTextareaInput("");
+                        }}
+                    >
+                        [Reply to Thread]
+                    </a>{" "}
+                    <div
+                        style={{
+                            float: "right",
+                            right: "2rem",
+                            position: "fixed",
+                        }}
+                    >
+                        <PostReplyPopUp
+                            clickedPostReply={clickedPostReply}
+                            SetClickedPostReply={SetClickedPostReply}
+                            replyTextareaInput={replyTextareaInput}
+                            SetReplyTextareaInput={SetReplyTextareaInput}
+                            handleReplyTextareaChange={
+                                handleReplyTextareaChange
+                            }
+                            clickedReplytoReply={clickedReplytoReply}
+                            SetClickedReplytoReply={SetClickedReplytoReply}
+                            threadID={props.thread_id}
+                            ReplytoReplyto={ReplytoReplyto}
+                            {...(props.singleThread && {
+                                setThread: props.setThread,
+                            })}
+                            {...(props.singleThread && {
+                                setLastUpdate: props.setLastUpdate,
+                            })}
+                        />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <a
+                        className="HyperText"
+                        onClick={() =>
+                            SetClickedRevealThread(!clickedRevealThread)
+                        }
+                        style={{ display: "inline-block" }}
+                    >
+                        {clickedRevealThread
+                            ? "Reveal Thread <..."
+                            : "Collapse Thread >..."}
+                    </a>
+                    <Link
+                        href={`/thread/${completeId(props.thread_id)}`}
+                        className="HyperText"
+                        style={{
+                            textAlign: "right",
+                            float: "right",
+                            textDecoration: "none",
+                        }}
+                    >
+                        [See Thread]
+                    </Link>
+                </>
+            )}{" "}
             <div style={{ display: "flex", flexDirection: "column" }}>
                 <p
                     onMouseEnter={() => setHoveringTime(true)}
@@ -171,7 +214,9 @@ function Thread(props: Props) {
                                     "http://localhost:3001/media/" + props.image
                                 }
                                 className="ThreadImg"
-                                onClick={handleClickThreadImage}
+                                onClick={() =>
+                                    SetClickedThreadImage(!clickedThreadImage)
+                                }
                             />
                         </>
                     )}
@@ -187,7 +232,9 @@ function Thread(props: Props) {
                     <a
                         className="HyperText"
                         style={{ display: "inline-block" }}
-                        onClick={handleClickRevealReplies}
+                        onClick={() =>
+                            SetClickedRevealReplies(!clickedRevealReplies)
+                        }
                     >
                         {props.replies && props.replies.length}{" "}
                         {props.replies && props.replies.length == 1
@@ -219,7 +266,18 @@ function Thread(props: Props) {
                                         mouseCord={mouseCord}
                                         threadId={props.thread_id}
                                         key={reply.reply_id}
+                                        clickedReplytoReply={
+                                            clickedReplytoReply
+                                        }
+                                        SetClickedReplytoReply={
+                                            SetClickedReplytoReply
+                                        }
+                                        SetClickedPostReply={
+                                            SetClickedPostReply
+                                        }
+                                        SetReplytoReplyto={SetReplytoReplyto}
                                         replies={props.replies}
+                                        singleThread={props.singleThread}
                                     />
                                 ))}
                         </div>
