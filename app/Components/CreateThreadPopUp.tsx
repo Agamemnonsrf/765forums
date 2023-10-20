@@ -4,10 +4,11 @@ import Draggable, { DraggableProps } from "react-draggable";
 import { useContext, useEffect } from "react";
 import { TestContext } from "../Utils/context";
 import React from "react";
-import { ThreadIfb, MediaI } from "../Utils/interfaces";
+import { ThreadIfb, MediaI, boardT } from "../Utils/interfaces";
 import { getAllThreads, usePostThread } from "../Utils/api-utils";
 import uuid from "react-uuid";
 import { mySQLDate } from "../Utils/utils";
+import { usePathname } from "next/navigation";
 
 const CreateThreadPopUp = () => {
     const {
@@ -25,6 +26,7 @@ const CreateThreadPopUp = () => {
     } = useContext(TestContext);
 
     const { isLoading, error, success, postThread } = usePostThread();
+    const board: boardT = usePathname().split("/")[1] as boardT;
 
     const closeCreateThread = () => {
         SetClickedCreateThread(false);
@@ -39,7 +41,7 @@ const CreateThreadPopUp = () => {
             SetTextareaInput("");
             SetThreadImage("");
             SetClickedCreateThread(false);
-            getAllThreads()
+            getAllThreads(board)
                 .then((threads) => {
                     setThreads(threads);
                 })
@@ -147,7 +149,8 @@ const CreateThreadPopUp = () => {
                                     if (isLoading) return;
                                     if (
                                         titleTextareaInput.length === 0 ||
-                                        textareaInput.length === 0
+                                        textareaInput.length === 0 ||
+                                        titleTextareaInput.length > 45
                                     ) {
                                         SetHighlightEmptyField(true);
                                         return;
@@ -164,9 +167,10 @@ const CreateThreadPopUp = () => {
                                         image: threadImage
                                             ? threadImage.media.media_id
                                             : null,
+                                        board: board,
                                     };
 
-                                    if (threadImage.media) {
+                                    if (threadImage?.media) {
                                         postThread(
                                             thread,
                                             threadImage.media,

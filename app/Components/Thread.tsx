@@ -7,7 +7,7 @@ import ThreadReply from "./ThreadReply";
 import Link from "next/link";
 import { adjustTZ, completeId, decideTime } from "../Utils/utils";
 
-import PostReplyPopUp from "../Components/PostReplyPopUp";
+import PostReplyPopUp from "./PostReplyPopUp";
 
 interface Props {
     body: string;

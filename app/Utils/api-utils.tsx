@@ -1,8 +1,21 @@
-import { MediaI, ThreadI, ThreadIfb, ThreadReplyI } from "./interfaces";
+import {
+    MediaI,
+    ThreadI,
+    ThreadIfb,
+    ThreadPreviewI,
+    ThreadReplyI,
+} from "./interfaces";
 import { useState } from "react";
 
-const getAllThreads = async (): Promise<ThreadI[]> => {
-    const url = new URL("http://localhost:3001/threads");
+const getThreadPreviews = async (board: string): Promise<ThreadPreviewI[]> => {
+    const url = new URL(`http://localhost:3001/thread-previews/${board}`);
+    const response = await fetch(url);
+    const threads = await response.json();
+    return threads;
+};
+
+const getAllThreads = async (board: string): Promise<ThreadI[]> => {
+    const url = new URL(`http://localhost:3001/${board}/threads`);
     const response = await fetch(url);
     const threads = await response.json();
     return threads;
@@ -133,4 +146,10 @@ const usePostReply = () => {
     return { isLoading, error, success, setSuccess, postReply, setError };
 };
 
-export { getAllThreads, getThread, usePostThread, usePostReply };
+export {
+    getAllThreads,
+    getThread,
+    usePostThread,
+    usePostReply,
+    getThreadPreviews,
+};

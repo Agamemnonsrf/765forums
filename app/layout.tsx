@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { FaJoint } from "react-icons/fa";
+import "/public/App.css";
 
 export const metadata = {
     title: "765Forums",

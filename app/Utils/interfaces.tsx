@@ -1,9 +1,28 @@
+type boardT =
+    | "tech"
+    | "trvl"
+    | "fit"
+    | "out"
+    | "entm"
+    | "sci"
+    | "lit"
+    | "game"
+    | "art"
+    | "news";
+
 interface ThreadI extends ThreadIfb {
     replies: ThreadReplyI[];
 }
 
+interface ThreadPreviewI {
+    thread_id: number;
+    title: string;
+    reply_count: number;
+}
+
 interface ThreadIfb extends ThreadSkeletonI {
     thread_id: number;
+    board: boardT;
 }
 
 interface ThreadSkeletonI {
@@ -30,4 +49,12 @@ interface MediaI {
     kilobytes: number;
 }
 
-export type { ThreadI, ThreadIfb, ThreadReplyI, ThreadSkeletonI, MediaI };
+export type {
+    ThreadI,
+    ThreadIfb,
+    ThreadReplyI,
+    ThreadSkeletonI,
+    MediaI,
+    ThreadPreviewI,
+    boardT,
+};
