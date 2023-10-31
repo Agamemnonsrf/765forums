@@ -22,10 +22,9 @@ const boards: Board[] = [
     },
     {
         id: 1,
-        name: "Travel",
-        description:
-            "Travel tips, adventure stories, and destination recommendations.",
-        short_name: "trvl",
+        name: "Politics",
+        description: "Political discussions and current events.",
+        short_name: "polt",
     },
     {
         id: 2,

@@ -6,6 +6,7 @@ import { ThreadI, ThreadReplyI } from "../Utils/interfaces";
 import ThreadReply from "./ThreadReply";
 import Link from "next/link";
 import { adjustTZ, completeId, decideTime } from "../Utils/utils";
+import { usePathname } from "next/navigation";
 
 import PostReplyPopUp from "./PostReplyPopUp";
 
@@ -50,6 +51,8 @@ function Thread(props: Props) {
 
     const local_created_at = adjustTZ(new Date(props.created_at));
     const local_last_updated = adjustTZ(new Date(props.last_updated));
+
+    const currBoard = usePathname().split("/")[1];
 
     return (
         <div
@@ -121,7 +124,7 @@ function Thread(props: Props) {
                             : "Collapse Thread >..."}
                     </a>
                     <Link
-                        href={`/thread/${completeId(props.thread_id)}`}
+                        href={`/${currBoard}/${completeId(props.thread_id)}`}
                         className="HyperText"
                         style={{
                             textAlign: "right",

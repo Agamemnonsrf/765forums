@@ -31,7 +31,7 @@ function ThreadPage() {
                     style={{ justifyContent: "space-between" }}
                 >
                     <Link
-                        href={"/"}
+                        href={`/${thread.board}`}
                         className="HyperText"
                         style={{
                             textDecoration: "none",
